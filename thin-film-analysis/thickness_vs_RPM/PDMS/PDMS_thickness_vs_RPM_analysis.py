@@ -8,15 +8,15 @@ import sys
 
 def main():
 	# Modules
-	sys.path.insert(0, '../Analyzers')
+	sys.path.insert(0, '../../Analyzers')
 	import thickness_vs_RPM_analyzer as tR
 
 	# Directory, parameters for plot and function for curve fit
-	directory = './PDMS/'
+	directory = './thickness vs RPM/'
 
 	colors = ['Purple', 'Red', '#0bb']
 	labels = ["05-09-24 test", "11-09-24", "19-09-24"]
-	title = "PDMS - Thickness vs RPM\nFit function: thickness = p / RP"
+	title = "PDMS - Thickness vs RPM\nFit function: thickness = p / RPM"
 	graph_filename = "PDMS - Thickness vs RPM.pdf"
 
 	function = lambda R, p: p / R
