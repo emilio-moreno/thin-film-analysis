@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import sys
+from uncertainties import ufloat
 
 
 def main():
@@ -16,7 +17,8 @@ def main():
 	listdir = sorted(listdir, key = ta.extract_integer)
 
 	# Refractive index
-	refrac_n = 1.4235
+	refrac_n = ufloat(1.76, 0.13) # Measured with microscope
+	# refrac_n = 1.4235 # Internet
 
 	# Wavelength bounds
 	default_min_wl = 440
@@ -39,7 +41,7 @@ def main():
 	RPM_std = [float(RPM_std) for RPM_std in RPM_df['RPM_std']]
 
 	# Calculate number of maxima
-	n_max = ta.calculate_n_max(listdir, wavelength_bounds, RPM, max_corrections, graph = True)
+	n_max = ta.calculate_n_max(listdir, wavelength_bounds, RPM, max_corrections, graph = False)
 
 	# Calculate thickness
 	thickness = ta.calculate_thickness(refrac_n, n_max, wavelength_bounds[:, 0], wavelength_bounds[:, 1])
