@@ -3,10 +3,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import sys
+from uncertainties import ufloat
 
 
 def main():
-
 	sys.path.insert(0, '../Analyzers')
 	import thickness_analyzer as ta
 
@@ -17,7 +17,8 @@ def main():
 	listdir = sorted(listdir, key = ta.extract_integer)
 
 	# Refractive index
-	refrac_n = 1.4235
+	refrac_n = ufloat(1.76, 0.13) # Measured with microscope
+	# refrac_n = ufloat(1.4235, 0) # Internet
 
 	# Wavelength bounds
 	default_min_wl = 440
@@ -44,12 +45,13 @@ def main():
 	n_max = ta.calculate_n_max(listdir, wavelength_bounds, RPM, max_corrections, graph = False)
 
 	# Calculate thickness
-	thickness = ta.calculate_thickness(refrac_n, n_max, wavelength_bounds[:, 0], wavelength_bounds[:, 1])
-	thickness = thickness / 1000
-	thickness_std = np.zeros(len(thickness))
+	uthickness = ta.calculate_thickness(refrac_n, n_max, wavelength_bounds[:, 0], wavelength_bounds[:, 1])
+	uthickness = uthickness / 1000
+	thickness = [t.n for t in uthickness]
+	thickness_std = [t.s for t in uthickness]
 
 	df_filename = 'PDMS_thickness_RPM_19-09-24.CSV'
-	ta.export_df(RPM_df, thickness, thickness_std, listdir, df_filename, show = True)
+	ta.export_df(RPM_df, thickness, thickness_std, wavelength_bounds, n_max, listdir, df_filename, show = True)
 	ta.graph_thickness(RPM, RPM_std, thickness, thickness_std, "PDMS - Thickness vs RPM\n19-09-24")
 
 

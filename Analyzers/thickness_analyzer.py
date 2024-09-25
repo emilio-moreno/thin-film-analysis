@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+from uncertainties import umath
 
 def import_data(filename):
 	df = pd.read_csv(filename, skiprows = 2, sep = "  ", names=["Wavelength", "Transmitance"], engine='python', dtype='float64')
@@ -14,7 +15,7 @@ def extract_integer(filename):
 
 def graph_maxima(x, y, title, maximum_positions, max_correction, dev_y = None, extraticks = None):
 	# rcParams
-	rc_update = {'font.size': 18, 'font.family': 'Times New Roman'}
+	rc_update = {'font.size': 18, 'font.family': 'serif', 'font.serif': ['Times New Roman', 'FreeSerif']}
 	plt.rcParams.update(rc_update)
 
 	# Plots
@@ -74,7 +75,7 @@ def calculate_n_max(listdir, wavelength_bounds, RPMs, max_corrections, graph = T
 	return np.array(number_of_max)
 
 
-def calculate_thickness(n, m, min_wl, max_wl):
+def calculate_thickness(n, m, min_wl, max_wl, alpha = 0):
 	'''
 	Parameters
 	----------
@@ -91,10 +92,10 @@ def calculate_thickness(n, m, min_wl, max_wl):
 		Maximum wavelength.
 	'''
 	wl_diff = 1 / min_wl - 1 / max_wl
-	return m / (2 * n * wl_diff)
+	return m / (2 * wl_diff * umath.sqrt(n**2 - np.sin(umath.radians(alpha))**2))
 
 
-def export_df(RPM_df, thickness, thickness_std, listdir, df_filename, show = True):
+def export_df(RPM_df, thickness, thickness_std, wavelength_bounds, n_max, listdir, df_filename, show = True):
 		# Dictionary values for new dataframe including thickness
 		short_filenames = [filename.split('/')[-1] for filename in listdir]
 		df_values = []
@@ -103,13 +104,16 @@ def export_df(RPM_df, thickness, thickness_std, listdir, df_filename, show = Tru
 		df_values.insert(1, ('transmitance_filename', short_filenames))
 		df_values.append(('thickness (um)', thickness))
 		df_values.append(('thickness_std', thickness_std))
+		df_values.append(('min_wavelength', wavelength_bounds[:, 0]))
+		df_values.append(('max_wavelength', wavelength_bounds[:, 1]))
+		df_values.append(('n_max', n_max))
 
 		# Data to df and CSV
 		thickness_RPM_df = pd.DataFrame(dict(df_values[1:]))
 
 		# We'll save a copy of df in current directory
 		thickness_RPM_df.to_csv(f'./{df_filename}')
-		thickness_RPM_df.to_csv(f'../thickness_vs_RPM/PDMS/{df_filename}')
+		thickness_RPM_df.to_csv(f'../thickness_vs_RPM/PDMS/thickness vs RPM/{df_filename}')
 
 		if show:
 			pd.set_option('display.max_rows', None, 'display.max_columns', None,
@@ -119,7 +123,7 @@ def export_df(RPM_df, thickness, thickness_std, listdir, df_filename, show = Tru
 
 def graph_thickness(RPM, RPM_std, thickness, thickness_std, title, extraticks = None):
 	# rcParams
-	rc_update = {'font.size': 18, 'font.family': 'Times New Roman'}
+	rc_update = {'font.size': 18, 'font.family': 'serif', 'font.serif': ['Times New Roman', 'FreeSerif']}
 	plt.rcParams.update(rc_update)
 
 	# Plots
@@ -129,7 +133,7 @@ def graph_thickness(RPM, RPM_std, thickness, thickness_std, title, extraticks = 
 
 	# Errors
 	err = [(r_std, t_std) for r_std, t_std in zip(thickness_std, RPM_std)]
-	ax.errorbar(RPM, thickness, xerr = RPM_std, yerr = None, 
+	ax.errorbar(RPM, thickness, xerr = RPM_std, yerr = thickness_std, 
 				color = 'Purple', capsize = 5, ls = 'none')
 
 	# Format

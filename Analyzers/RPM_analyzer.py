@@ -42,7 +42,7 @@ def extract_integer(filename):
 
 def graph(s, V, t, T, voltage_bound, title):
     # Format
-    rc_update = {'font.size': 18, 'font.family': 'Times New Roman'}
+    rc_update = {'font.size': 18, 'font.family': 'serif', 'font.serif': ['Times New Roman', 'FreeSerif']}
     plt.rcParams.update(rc_update)
 
     # Plots

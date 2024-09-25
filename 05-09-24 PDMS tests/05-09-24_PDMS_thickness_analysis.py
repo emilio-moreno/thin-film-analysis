@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import sys
+from uncertainties import ufloat
 
 
 def main():
@@ -17,7 +18,8 @@ def main():
 	listdir = sorted(listdir)
 
 	# Refractive index
-	refrac_n = 1.4235
+	refrac_n = ufloat(1.76, 0.13) # Measured with microscope
+	# refrac_n = ufloat(1.4235, 0) # Internet
 
 	# Wavelength bounds
 	default_min_wl = 440
@@ -39,9 +41,10 @@ def main():
 	n_max = ta.calculate_n_max(listdir, wavelength_bounds, RPM, max_corrections, graph = False)
 
 	# Calculate thickness
-	thickness = ta.calculate_thickness(refrac_n, n_max, wavelength_bounds[:, 0], wavelength_bounds[:, 1])
-	thickness = thickness / 1000
-	thickness_std = np.zeros(len(thickness))
+	uthickness = ta.calculate_thickness(refrac_n, n_max, wavelength_bounds[:, 0], wavelength_bounds[:, 1])
+	uthickness = uthickness / 1000
+	thickness = [t.n for t in uthickness]
+	thickness_std = [t.s for t in uthickness]
 
 	# Data to df and CSV
 	short_filenames = [filename.split('/')[-1] for filename in listdir]
@@ -51,7 +54,7 @@ def main():
 
 	# We'll save a copy of df in current directory
 	thickness_RPM_df.to_csv('./PDMS_thickness_RPM_05-09-24.CSV')
-	thickness_RPM_df.to_csv('../thickness_vs_RPM/PDMS/PDMS_thickness_RPM_05-09-24.CSV')
+	thickness_RPM_df.to_csv('../thickness_vs_RPM/PDMS/thickness vs RPM/PDMS_thickness_RPM_05-09-24.CSV')
 	pd.set_option('display.max_rows', None, 'display.max_columns', None,
 						  'display.width', 1000)
 	print(thickness_RPM_df)

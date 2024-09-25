@@ -18,7 +18,7 @@ def main():
 
 	# Refractive index
 	refrac_n = ufloat(1.76, 0.13) # Measured with microscope
-	# refrac_n = 1.4235 # Internet
+	# refrac_n = ufloat(1.4235, 0) # Internet
 
 	# Wavelength bounds
 	default_min_wl = 440
@@ -44,13 +44,14 @@ def main():
 	n_max = ta.calculate_n_max(listdir, wavelength_bounds, RPM, max_corrections, graph = False)
 
 	# Calculate thickness
-	thickness = ta.calculate_thickness(refrac_n, n_max, wavelength_bounds[:, 0], wavelength_bounds[:, 1])
-	thickness = thickness / 1000
-	thickness_std = np.zeros(len(thickness))
+	uthickness = ta.calculate_thickness(refrac_n, n_max, wavelength_bounds[:, 0], wavelength_bounds[:, 1])
+	uthickness = uthickness / 1000
+	thickness = [t.n for t in uthickness]
+	thickness_std = [t.s for t in uthickness]
 
 	# I'll exclude PDMS # 7
 	df_filename = 'PDMS_thickness_RPM_11-09-24.CSV'
-	ta.export_df(RPM_df[:-1], thickness[:-1], thickness_std[:-1], listdir[:-1], df_filename, show = True)
+	ta.export_df(RPM_df[:-1], thickness[:-1], thickness_std[:-1], wavelength_bounds[:-1], n_max[:-1], listdir[:-1], df_filename, show = True)
 	ta.graph_thickness(RPM, RPM_std, thickness, thickness_std, "PDMS - Thickness vs RPM\n11-09-24")
 
 
