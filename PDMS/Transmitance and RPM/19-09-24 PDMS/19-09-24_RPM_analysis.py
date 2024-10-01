@@ -6,7 +6,7 @@ import sys
 
 
 def main():
-    sys.path.insert(0, '../Analyzers')
+    sys.path.insert(0, '../../../Analyzers')
     import RPM_analyzer as Ra
 
     # Get data

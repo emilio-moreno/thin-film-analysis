@@ -19,7 +19,7 @@ def main():
 	# Refractive index
 	# refrac_n = ufloat(1.76, 0.13) # Measured with microscope
 	# refrac_n = ufloat(1.4235, 0) # Internet
-	refrac_n = ufloat(1.4230060554603676,0.03977302172611098) # Pfund
+	refrac_n = ufloat(1.4230060554603676, 0.03977302172611098) # Pfund
 
 	sys.path.insert(0, '../Analyzers')
 	import thickness_analyzer as ta
@@ -33,6 +33,8 @@ def main():
 
 	# RPM
 	RPM_df = pd.read_csv('../19-09-24 PDMS/19-09-24_RPM.CSV', skiprows = [1, 10, 11])
+	RPM = RPM_df['RPM']
+	RPM_std = [float(RPM_std) for RPM_std in RPM_df['RPM_std']]
 
 	# Wavelength bounds
 	default_min_wl = 440
@@ -46,19 +48,20 @@ def main():
 	# Modifying bounds and corrections for specific film
 	max_corrections[0] = -5
 
+	# Calculate number of maxima
+	n_max, wavelength_bounds = ta.calculate_n_max(listdir, wavelength_bounds, RPM, max_corrections, graph = False)
+
 	# I'll omit index 6, 7 and the damaged films
-	print(RPM_df)
-	remove_index = [1, 6, 7, 11]
+	remove_index = [1, 6, 7]
 	listdir = np.delete(listdir, remove_index)
 	wavelength_bounds = np.delete(wavelength_bounds, remove_index, axis=0)
 	max_corrections = np.delete(max_corrections, remove_index)
+	n_max = np.delete(n_max, remove_index)
 	RPM_df.drop(index = remove_index, inplace = True)
 	RPM = RPM_df['RPM']
 	RPM_std = [float(RPM_std) for RPM_std in RPM_df['RPM_std']]
 	print(RPM_df)
 
-	# Calculate number of maxima
-	n_max, wavelength_bounds = ta.calculate_n_max(listdir, wavelength_bounds, RPM, max_corrections, graph = False)
 
 	# Calculate thickness
 	uthickness = ta.calculate_thickness(refrac_n, n_max, wavelength_bounds[:, 0], wavelength_bounds[:, 1], alpha = ualpha)

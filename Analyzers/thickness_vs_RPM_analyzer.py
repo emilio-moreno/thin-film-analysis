@@ -3,27 +3,28 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import scipy as sp
 
-def graph(dfs, fig, ax, labels, title, colors, plot = True):
-	rc_update = {'font.size': 18, 'font.family': 'serif', 'font.serif': ['Times New Roman', 'FreeSerif']}
+def graph(dfs, fig, ax, labels, title, linestyles, xlabel, ylabel, colors):
+	rc_update = {'font.size': 18, 'font.family': 'serif',
+				 'font.serif': ['Times New Roman', 'FreeSerif'], 'mathtext.fontset': 'cm'}
 	plt.rcParams.update(rc_update)
 
-	for df, label, color in zip(dfs, labels, colors):
+	for df, label, color, ls in zip(dfs, labels, colors, linestyles):
 		# Plots
 		RPM, thickness = df['RPM'], df['thickness (um)']
-		ax.scatter(RPM, thickness, label = label, marker = '*', color = color, s = 20)
+		ax.scatter(RPM, thickness, label = label, marker = 's', color = color, zorder=2)
 		# Errors
-		ax.errorbar(RPM, thickness, xerr = df['RPM_std'], yerr = df['thickness_std'],
-					color = color, capsize = 5, ls = 'none')
+		eb = ax.errorbar(RPM, thickness, xerr = df['RPM_std'], yerr = df['thickness_std'],
+					color = color, capsize = 7, ls = 'none', elinewidth=5, zorder=2)
+		eb[-1][0].set_linestyle(ls)
 		
 	# Format
-	ax.set(title = title, xlabel = "RPM", ylabel = "Thickness (um)")
+	fig.suptitle(title)
+	ax.set(xlabel = xlabel, ylabel = ylabel)
 	ax.grid(color = '#999', linestyle = '--')
-	ax.legend(loc = 1, fontsize = 12, ncols = 2)
+	ax.legend(loc = 1, fontsize = 10, ncols = 2)
 
 	figManager = plt.get_current_fig_manager()
 	figManager.full_screen_toggle()
-	if plot:
-		plt.show()
 
 
 def individual_curve_fit(dfs, function):

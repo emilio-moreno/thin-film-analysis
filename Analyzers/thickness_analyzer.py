@@ -15,7 +15,8 @@ def extract_integer(filename):
 
 def graph_maxima(x, y, n_max, title, maximum_positions, max_correction, dev_y = None, extraticks = None):
 	# rcParams
-	rc_update = {'font.size': 18, 'font.family': 'serif', 'font.serif': ['Times New Roman', 'FreeSerif']}
+	rc_update = {'font.size': 18, 'font.family': 'serif',
+				 'font.serif': ['Times New Roman', 'FreeSerif'], 'mathtext.fontset': 'cm'}
 	plt.rcParams.update(rc_update)
 
 	# Plots
@@ -42,6 +43,13 @@ def graph_maxima(x, y, n_max, title, maximum_positions, max_correction, dev_y = 
 	plt.show()
 
 
+def calculate_slope_sign(x, y):
+	slopes = []
+	for x1, x2, y1, y2 in zip(x[:-1], x[1:], y[:-1], y[1:]):
+		slopes.append(y2 - y1)
+	return slopes
+
+
 def get_max_positions(derivative, wavelength):
 	maximum_positions = []
 	for d, n_d, wl in zip(derivative[:-1], derivative[1:], wavelength[:-1]):
@@ -62,9 +70,9 @@ def calculate_n_max(listdir, wavelength_bounds, RPMs, max_corrections, graph = T
 		trans_df = import_data(filename)
 		trans_df = trans_df[min_wl <= trans_df['Wavelength']][trans_df['Wavelength'] <= max_wl].dropna()
 
-		derivative = np.gradient(trans_df["Transmitance"], trans_df["Wavelength"])
 		wavelength = trans_df["Wavelength"]
 		transmitance = trans_df["Transmitance"]
+		derivative = np.gradient(transmitance, wavelength)
 		maximum_positions = get_max_positions(derivative, wavelength)
 		n_max = len(maximum_positions)
 		number_of_max.append(n_max + correction)
