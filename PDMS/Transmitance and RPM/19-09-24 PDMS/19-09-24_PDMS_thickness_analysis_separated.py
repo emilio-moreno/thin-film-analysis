@@ -40,7 +40,6 @@ def main():
 	# RPM
 	RPM_df = pd.read_csv('./19-09-24_RPM.CSV', skiprows = [1, 11])
 	RPM = RPM_df['RPM']
-	RPM_std = [float(RPM_std) for RPM_std in RPM_df['RPM_std']]
 	
 	# Calculate number of maxima
 	n_max, wavelength_bounds = ta.calculate_n_max(listdir, wavelength_bounds, RPM, max_corrections, graph = False)
@@ -53,7 +52,6 @@ def main():
 	n_max = np.delete(n_max, remove_index)
 	RPM_df.drop(index = remove_index, inplace = True)
 	RPM = RPM_df['RPM']
-	RPM_std = [float(RPM_std) for RPM_std in RPM_df['RPM_std']]
 
 	# Calculate thickness
 	uthickness = ta.calculate_thickness(refrac_n, n_max, wavelength_bounds[:, 0], wavelength_bounds[:, 1])
@@ -66,7 +64,7 @@ def main():
 	df_filename = '../../Thickness vs RPM/Data/less_PDMS_thickness_RPM_19-09-24.CSV'
 	ta.export_df(RPM_df[:7], thickness[:7], thickness_std[:7], wavelength_bounds[:7], 
 				 n_max[:7], listdir[:7], df_filename, show = True)
-	# ta.graph_thickness(RPM[:7], RPM_std[:7], thickness[:7], thickness_std[:7],
+	# ta.graph_thickness(RPM[:7], thickness[:7], thickness_std[:7],
 	#				   "Less PDMS - Thickness vs RPM\n19-09-24")
 
 	# Films with more PDMS
@@ -74,7 +72,7 @@ def main():
 	print(RPM_df[7:])
 	ta.export_df(RPM_df[7:], thickness[7:], thickness_std[7:], wavelength_bounds[7:], 
 				 n_max[7:], listdir[7:], df_filename, show = True)
-	# ta.graph_thickness(RPM[7:], RPM_std[7:], thickness[7:], thickness_std[7:],
+	# ta.graph_thickness(RPM[7:], thickness[7:], thickness_std[7:],
 	#				   "More PDMS - Thickness vs RPM\n19-09-24")
 
 

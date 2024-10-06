@@ -40,10 +40,10 @@ def main():
 	RPM_df = pd.read_csv('./11-09-24_RPM.CSV')
 	
 	RPM = RPM_df['RPM']
-	RPM_std = [float(RPM_std) for RPM_std in RPM_df['RPM_std']]
 
 	# Calculate number of maxima
-	n_max, wavelength_bounds = ta.calculate_n_max(listdir, wavelength_bounds, RPM, max_corrections, graph = True)
+	n_max, wavelength_bounds = ta.calculate_n_max(listdir, wavelength_bounds, RPM,
+												  max_corrections, graph=False)
 	
 	# Remove damaged (4) or unclear (6) PDMS
 	remove_index = [4, 6]
@@ -53,7 +53,6 @@ def main():
 	n_max = np.delete(n_max, remove_index)
 	RPM_df.drop(index = remove_index, inplace = True)
 	RPM = RPM_df['RPM']
-	RPM_std = [float(RPM_std) for RPM_std in RPM_df['RPM_std']]
 
 	# Calculate thickness
 	uthickness = ta.calculate_thickness(refrac_n, n_max, wavelength_bounds[:, 0], wavelength_bounds[:, 1])
@@ -63,7 +62,7 @@ def main():
 
 	df_filename = '../../Thickness vs RPM/Data/PDMS_thickness_RPM_11-09-24.CSV'
 	ta.export_df(RPM_df, thickness, thickness_std, wavelength_bounds, n_max, listdir, df_filename, show = True)
-	# ta.graph_thickness(RPM, RPM_std, thickness, thickness_std, "PDMS - Thickness vs RPM\n11-09-24")
+	ta.graph_thickness(RPM, thickness, thickness_std, "PDMS - Thickness vs RPM\n11-09-24")
 
 
 if __name__ == '__main__':

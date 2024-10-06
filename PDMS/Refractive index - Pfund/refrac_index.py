@@ -1,3 +1,4 @@
+'''Calculation of refractive index of PDMS by Pfund method.'''
 import pandas as pd
 import numpy as np
 from uncertainties import unumpy as un

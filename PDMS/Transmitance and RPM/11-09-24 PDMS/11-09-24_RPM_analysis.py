@@ -30,7 +30,7 @@ def main():
         # Ra.graph(s, V, t, T, x[1], f'{x[0]} - Index: {i}')
 
     # New DF
-    df_filename = '../../Thickness vs RPM/Data/PDMS_thickness_RPM_11-09-24.CSV'
+    df_filename = './11-09-24_RPM.CSV'
     Ra.export_df(RPM, RPM_std, listdir, df_filename, show = True)
 
 

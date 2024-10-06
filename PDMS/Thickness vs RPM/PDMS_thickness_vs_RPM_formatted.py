@@ -23,15 +23,13 @@ def main():
 				 'font.serif': ['Times New Roman', 'FreeSerif'], 'mathtext.fontset': 'cm',
 				 'lines.linewidth': 3, 'lines.markersize': 4}
 	plt.rcParams.update(rc_update)
-	# colors = ['#d0990099', '#fff20fff', '#00808699', '#41f8ffff', '#84848499', '#1a1a1aff']
-	# colors = ['#fff20fff', '#41f8ffff', '#d09900ff', '#008086ff', '#848484ff', '#1a1a1aff']
 	colors = ['#0040eb', '#ffbf14', '#ff7f79', '#008086', '#c10000', '#56cccc']
 	linestyle = ['-', '--', '-', '--', '-', '--']
 	labels = ["$\\alpha = 0$° — 1.5 min", "$\\alpha = (29.8\\pm0.4)$° — 1.5 min",
 			  "$\\alpha = 0$° — 2 min", '$\\alpha = (29.8\\pm0.4)$° — 2 min ',
 			  "$\\alpha = 0$° — 2 min (++PDMS)", "$\\alpha = (29.8\\pm0.4)$° — 2 min (++PDMS)"]
 	title = "PDMS - Grosor ($d$) vs RPM\nAjuste: $d = p / RPM$"
-	graph_filename = "../../Experiment Diagrams/PDMS - Thickness vs RPM.png"
+	graph_filename = "../../Figures/PDMS - Thickness vs RPM.pdf"
 
 	function = lambda R, p: p / R
 
@@ -43,9 +41,6 @@ def main():
 	for filename in listdir:
 		# Skip test runs
 		if '05' in filename:
-			continue
-		# Skip non separated data from the 24/19th
-		if '19' in filename and not ('less' in filename or 'more' in filename):
 			continue
 		dfs.append(pd.read_csv(filename))
 

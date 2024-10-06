@@ -34,7 +34,6 @@ def main():
 	# RPM
 	RPM_df = pd.read_csv('../19-09-24 PDMS/19-09-24_RPM.CSV', skiprows = [1, 10, 11])
 	RPM = RPM_df['RPM']
-	RPM_std = [float(RPM_std) for RPM_std in RPM_df['RPM_std']]
 
 	# Wavelength bounds
 	default_min_wl = 440
@@ -59,8 +58,6 @@ def main():
 	n_max = np.delete(n_max, remove_index)
 	RPM_df.drop(index = remove_index, inplace = True)
 	RPM = RPM_df['RPM']
-	RPM_std = [float(RPM_std) for RPM_std in RPM_df['RPM_std']]
-
 
 	# Calculate thickness
 	uthickness = ta.calculate_thickness(refrac_n, n_max, wavelength_bounds[:, 0], wavelength_bounds[:, 1], alpha = ualpha)

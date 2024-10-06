@@ -9,7 +9,7 @@ def graph(dfs, fig, ax, labels, title, linestyles, xlabel, ylabel, colors):
 		RPM, thickness = df['RPM'], df['thickness (um)']
 		ax.scatter(RPM, thickness, label = label, marker = 's', color = color, zorder=2)
 		# Errors
-		eb = ax.errorbar(RPM, thickness, xerr = df['RPM_std'], yerr = df['thickness_std'],
+		eb = ax.errorbar(RPM, thickness, xerr = None, yerr = df['thickness_std'],
 					color = color, capsize = 7, ls = 'none', elinewidth=5, zorder=2)
 		eb[-1][0].set_linestyle(ls)
 		

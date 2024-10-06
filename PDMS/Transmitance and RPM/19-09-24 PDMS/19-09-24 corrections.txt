@@ -1,6 +1,0 @@
-index,max_corrections,min_wl,max_wl
-0,-1,default,default
-6,0,477,703
-7,0,571,686
-8,0,593,738
-12,0,default,733

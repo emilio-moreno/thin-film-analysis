@@ -64,7 +64,7 @@ def main():
 				linestyle = ls, color = color, alpha = 0.5)
 
 	# Plotting data
-	tR.graph(dfs, fig, ax, labels, title, xlabel, ylabel, colors)
+	tR.graph(dfs, fig, ax, labels, title, linestyle, xlabel, ylabel, colors)
 	plt.show()
 	plt.savefig(graph_filename, bbox_inches='tight', dpi=200)
 

@@ -138,19 +138,19 @@ def export_df(RPM_df, thickness, thickness_std, wavelength_bounds, n_max, listdi
 			print(thickness_RPM_df)
 
 
-def graph_thickness(RPM, RPM_std, thickness, thickness_std, title, extraticks = None):
+def graph_thickness(RPM, thickness, thickness_std, title, extraticks = None):
 	# rcParams
 	rc_update = {'font.size': 18, 'font.family': 'serif', 'font.serif': ['Times New Roman', 'FreeSerif']}
 	plt.rcParams.update(rc_update)
 
 	# Plots
 	fig, ax= plt.subplots()
+	print(RPM, thickness)
 	ax.scatter(RPM, thickness, label = "Thickness vs RPM", marker = '*',
 			   color = 'Purple', s = 50)
 
-	# Errors
-	err = [(r_std, t_std) for r_std, t_std in zip(thickness_std, RPM_std)]
-	ax.errorbar(RPM, thickness, xerr = RPM_std, yerr = thickness_std, 
+	# Error
+	ax.errorbar(RPM, thickness, xerr = None, yerr = thickness_std, 
 				color = 'Purple', capsize = 5, ls = 'none')
 
 	# Format

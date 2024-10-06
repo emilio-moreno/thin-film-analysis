@@ -1,3 +1,5 @@
+'''.py to calculate required PDMS mass for measurable Pfund.'''
+
 import numpy as np
 
 
