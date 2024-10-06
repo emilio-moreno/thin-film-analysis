@@ -4,10 +4,6 @@ import matplotlib.pyplot as plt
 import scipy as sp
 
 def graph(dfs, fig, ax, labels, title, linestyles, xlabel, ylabel, colors):
-	rc_update = {'font.size': 18, 'font.family': 'serif',
-				 'font.serif': ['Times New Roman', 'FreeSerif'], 'mathtext.fontset': 'cm'}
-	plt.rcParams.update(rc_update)
-
 	for df, label, color, ls in zip(dfs, labels, colors, linestyles):
 		# Plots
 		RPM, thickness = df['RPM'], df['thickness (um)']
@@ -18,8 +14,7 @@ def graph(dfs, fig, ax, labels, title, linestyles, xlabel, ylabel, colors):
 		eb[-1][0].set_linestyle(ls)
 		
 	# Format
-	fig.suptitle(title)
-	ax.set(xlabel = xlabel, ylabel = ylabel)
+	ax.set(title = title, xlabel = xlabel, ylabel = ylabel)
 	ax.grid(color = '#999', linestyle = '--')
 	ax.legend(loc = 1, fontsize = 10, ncols = 2)
 

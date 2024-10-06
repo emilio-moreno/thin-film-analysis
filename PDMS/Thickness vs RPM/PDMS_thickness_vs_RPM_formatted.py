@@ -6,6 +6,7 @@ import os
 import glob
 import sys
 from uncertainties import ufloat
+from matplotlib.patches import Rectangle
 
 
 def main():
@@ -18,7 +19,7 @@ def main():
 	xlabel = 'RPM'
 	ylabel = 'Grosor (μm)'
 
-	rc_update = {'font.size': 18, 'font.family': 'serif',
+	rc_update = {'font.size': 30, 'font.family': 'serif',
 				 'font.serif': ['Times New Roman', 'FreeSerif'], 'mathtext.fontset': 'cm',
 				 'lines.linewidth': 3, 'lines.markersize': 4}
 	plt.rcParams.update(rc_update)
@@ -26,11 +27,11 @@ def main():
 	# colors = ['#fff20fff', '#41f8ffff', '#d09900ff', '#008086ff', '#848484ff', '#1a1a1aff']
 	colors = ['#0040eb', '#ffbf14', '#ff7f79', '#008086', '#c10000', '#56cccc']
 	linestyle = ['-', '--', '-', '--', '-', '--']
-	labels = ["Incidencia normal - 1.5 min", "Incidencia $(29.8\\pm0.4)$° - 1.5 min",
-			  "Incidencia normal - 2 min", 'Incidencia $(29.8\\pm0.4)$° - 2 min ',
-			  "Incidencia normal - 2 min (extra PDMS)", "Incidencia $(29.8\\pm0.4)$° - 2 min (extra PDMS)"]
-	title = "PDMS - Grosor vs RPM\nAjuste: $grosor = p / RPM$"
-	graph_filename = "../../Experiment Diagrams/PDMS - Thickness vs RPM.pdf"
+	labels = ["$\\alpha = 0$° — 1.5 min", "$\\alpha = (29.8\\pm0.4)$° — 1.5 min",
+			  "$\\alpha = 0$° — 2 min", '$\\alpha = (29.8\\pm0.4)$° — 2 min ',
+			  "$\\alpha = 0$° — 2 min (++PDMS)", "$\\alpha = (29.8\\pm0.4)$° — 2 min (++PDMS)"]
+	title = "PDMS - Grosor ($d$) vs RPM\nAjuste: $d = p / RPM$"
+	graph_filename = "../../Experiment Diagrams/PDMS - Thickness vs RPM.png"
 
 	function = lambda R, p: p / R
 
@@ -51,10 +52,6 @@ def main():
 	# Curve fits
 	parameters, covariances = tR.individual_curve_fit(dfs, function)
 
-	# rcParams 
-	rc_update = {'font.size': 18, 'font.family': 'serif', 'font.serif': ['Times New Roman', 'FreeSerif']}
-	plt.rcParams.update(rc_update)
-
 	# Plot
 	RPM_bounds = [[1400, 6000], [1400, 6000],
 				  [1000, 6000], [1000, 6000],
@@ -72,16 +69,38 @@ def main():
 		# Relative error
 		rel_STD = float(np.sqrt(c) / p) * 100
 		ax.plot(rpm, function(rpm, p),
-				label = f'{label}\n$p$ = $({float(p):.3E})\\pm{rel_STD:.2f}\\%$',
+				label = f'   {label}\n   $p$ = $({float(p):.3E})\\pm{rel_STD:.2f}\\%$',
 				linestyle = ls, color = color, alpha = 1, zorder=1)
 
+
+	# BG for legend
+	x_square = 2200
+	y_square = 38
+	width = 4000
+	height = 22
+	xlims = [750, 6250]
+	ylims = [5, 61]
+	ax.add_patch(Rectangle((x_square, y_square), width, height, facecolor="#eee", zorder=3))
+
+	# BG for legend
+	x_square = 4150
+	y_square = 25
+	width = 2050
+	height = 22
+	xlims = [750, 6250]
+	ylims = [5, 61]
+	ax.add_patch(Rectangle((x_square, y_square), width, height, facecolor="#eee", zorder=3))
+
+	ax.set(xlim = xlims, ylim = ylims)
+	#Legend
 	ax.legend(
-		framealpha = 1,
+		framealpha=0,
 		loc=1,
-	    fontsize=12.5,
+	    fontsize=15,
 	    ncols=2, 
-	    borderaxespad=0.3,
+	    borderaxespad=0.6,
 	    handletextpad=0.1,
+	    labelspacing=0.75,
 	    markerscale=2,
     )
 	plt.tight_layout()

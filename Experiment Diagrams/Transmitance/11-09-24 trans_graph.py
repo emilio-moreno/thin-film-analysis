@@ -13,7 +13,7 @@ def import_data(filename):
 
 def graph(x, y, n_max, title, max_positions_x, max_positions_y):
 	# rcParams
-	rc_update = {'font.size': 18, 'font.family': 'serif',
+	rc_update = {'font.size': 30, 'font.family': 'serif',
 				 'font.serif': ['Times New Roman', 'FreeSerif'], 'mathtext.fontset': 'cm',
 				 'lines.linewidth': 3, 'lines.markersize': 8}
 	plt.rcParams.update(rc_update)
@@ -41,7 +41,7 @@ def graph(x, y, n_max, title, max_positions_x, max_positions_y):
 	ax.legend(
 		framealpha = 1,
 		loc=1,
-	    fontsize=18,
+	    fontsize=26,
 	    ncols=2, 
 	    borderaxespad=0.3,
 	    handletextpad=0.1,
